@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Services - The Fashion Pet Salon</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="site-init py-4 bg-light">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="text-center text-md-left">
+                    <h1>The Fashion Pet</h1>
+                    <p>Your pet's second home</p>
+                </div>
+                <div class="text-center header-logo">
+                    <img src="scripts/puppy.png" alt="Puppy" class="img-fluid">
+                </div>
+                <div class="text-center text-md-right">
+                    <nav class="nav flex-column align-items-center">
+                        <a class="btn btn-outline-secondary fixed-size-btn" href="index.html">Home</a>
+                        <a class="btn btn-outline-secondary fixed-size-btn" href="register.html">Register Pet</a>
+                        <a class="btn btn-outline-secondary fixed-size-btn" href="services.html">Services</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+        <section class="my-5">
+            <h2 class="text-center mb-4">Register New Service</h2>
+            <div id="service-notification" class="alert d-none"></div>
+            <form id="serviceForm" class="form-container">
+                <div class="form-group">
+                    <label for="description">Service Description:</label>
+                    <input type="text" id="description" name="description" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price:</label>
+                    <input type="number" id="price" name="price" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Register Service</button>
+            </form>
+        </section>
+        <section class="my-5">
+            <h2 class="text-center mb-4">Available Services</h2>
+            <div id="serviceList" class="row"></div>
+        </section>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="scripts/storeManager.js"></script>
+    <script>
+        $(document).ready(function() {
+            function Service(description, price) {
+                this.description = description;
+                this.price = price;
+            }
+
+            function showNotification(message, type) {
+                let notification = $('#service-notification');
+                notification.removeClass('d-none alert-success alert-danger').addClass(`alert-${type}`).text(message).show();
+                setTimeout(function() {
+                    notification.hide();
+                }, 3000);
+            }
+
+            $('#serviceForm').on('submit', function(event) {
+                event.preventDefault();
+                let description = $('#description').val();
+                let price = $('#price').val();
+                let newService = new Service(description, price);
+                let services = getItem('services') || [];
+                services.push(newService);
+                saveItem('services', services);
+                $('#serviceForm')[0].reset();
+                showNotification('Service registered successfully!', 'success');
+                displayServices();
+            });
+
+            function displayServices() {
+                let services = getItem('services') || [];
+                let serviceList = $('#serviceList');
+                serviceList.empty();
+                services.forEach(function(service) {
+                    let serviceCard = `
+                        <div class="col-md-4">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h5 class="card-title">${service.description}</h5>
+                                    <p class="card-text">Price: $${service.price}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    serviceList.append(serviceCard);
+                });
+            }
+
+            displayServices();
+        });
+    </script>
+</body>
+</html>

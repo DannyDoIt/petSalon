@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Pet - The Fashion Pet Salon</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="site-init py-4 bg-light">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="text-center text-md-left">
+                    <h1>The Fashion Pet</h1>
+                    <p>Your pet's second home</p>
+                </div>
+                <div class="text-center header-logo">
+                    <img src="scripts/puppy.png" alt="Puppy" class="img-fluid">
+                </div>
+                <div class="text-center text-md-right">
+                    <nav class="nav flex-column align-items-center">
+                        <a class="btn btn-outline-secondary fixed-size-btn" href="index.html">Home</a>
+                        <a class="btn btn-outline-secondary fixed-size-btn" href="register.html">Register Pet</a>
+                        <a class="btn btn-outline-secondary fixed-size-btn" href="services.html">Services</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+        <section class="my-5">
+            <h2 class="text-center mb-4">Register New Pet</h2>
+            <div id="notification" class="alert d-none"></div>
+            <form id="petForm" class="form-container">
+                <div class="form-group">
+                    <label for="name">Pet Name:</label>
+                    <input type="text" id="name" name="name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="age">Pet Age:</label>
+                    <input type="number" id="age" name="age" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <select id="gender" name="gender" class="form-control" required>
+                        <option value="">- Select Gender -</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="breed">Breed:</label>
+                    <input type="text" id="breed" name="breed" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="service">Service:</label>
+                    <select id="service" name="service" class="form-control" required>
+                        <option value="">- Select Service -</option>
+                        <option value="Bath and Haircut">Bath and Haircut</option>
+                        <option value="Dental/Oral Hygiene">Dental/Oral Hygiene</option>
+                        <option value="Nail Trim">Nail Trim</option>
+                        <option value="Vaccination">Vaccination</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="type">Type:</label>
+                    <select id="type" name="type" class="form-control" required>
+                        <option value="">- Select Animal Type -</option>
+                        <option value="Dog">Dog</option>
+                        <option value="Cat">Cat</option>
+                        <option value="Rodent">Rodent</option>
+                        <option value="Rabbit">Rabbit</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Register Pet</button>
+            </form>
+        </section>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="scripts/storeManager.js"></script>
+    <script>
+        $(document).ready(function() {
+            function showNotification(message, type) {
+                let notification = $('#notification');
+                notification.removeClass('d-none alert-success alert-danger').addClass(`alert-${type}`).text(message).show();
+                setTimeout(function() {
+                    notification.hide();
+                }, 3000);
+            }
+
+            $('#petForm').on('submit', function(event) {
+                event.preventDefault();
+                let name = $('#name').val();
+                let age = $('#age').val();
+                let gender = $('#gender').val();
+                let breed = $('#breed').val();
+                let service = $('#service').val();
+                let type = $('#type').val();
+
+                let newPet = { name, age, gender, breed, service, type };
+                let pets = getItem('pets') || [];
+                pets.push(newPet);
+                saveItem('pets', pets);
+                $('#petForm')[0].reset();
+                showNotification('Pet registered successfully!', 'success');
+            });
+        });
+    </script>
+</body>
+</html>
